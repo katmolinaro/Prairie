@@ -3,7 +3,7 @@
     "path": "C:/Users/tania/Desktop/Prairie/script/master.R",
     "project_path": "script/master.R",
     "type": "r_source",
-    "hash": "2674257516",
+    "hash": "1079111831",
     "contents": "",
     "dirty": false,
     "created": 1778532337927.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "11,18",
+        "cursorPosition": "13,21",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1778532356,
+    "lastKnownWriteTime": 1778533185,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1778532356021,
+    "last_content_update": 1778533185598,
     "read_only": false,
     "read_only_alternatives": []
 }

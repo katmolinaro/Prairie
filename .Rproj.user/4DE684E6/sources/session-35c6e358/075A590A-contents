@@ -10,6 +10,8 @@ library(vegan)
 library(ade4)
 library(factoextra)
 library(FactoMineR)
+library(tr8)
+#library() taxonomy ?
 
 #Import and clean data ----
 
