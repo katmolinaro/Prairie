@@ -10,13 +10,14 @@ library(vegan)
 library(ade4)
 library(factoextra)
 library(FactoMineR)
-library(tr8)
+library(TR8)
+
 #library() taxonomy ?
 
 #Import and clean data ----
 
-source(script/import_data.R)
+#source(script/import_data.R)
 
 #Analyses ----
 
-source(script/analyses.R)
+#source(script/analyses.R)
