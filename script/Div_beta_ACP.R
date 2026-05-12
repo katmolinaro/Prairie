@@ -5,7 +5,7 @@
 prairie_sp_26 <- prairie_sp_clean %>% filter(Annee %in% c("2026"))
 
 # filtre parcelles
-prairie_sp_ACP <- prairie_sp_26 %>% filter(Parcelles %in% c("Grande parcelle", "Gite", "Parcelle regeneree", "Mesnil st père", "Mesnil st père 2"))
+prairie_sp_ACP <- prairie_sp_26 %>% filter(Parcelles %in% c("Grande parcelle","Chemin blanc", "Gite", "Parcelle regeneree", "Mesnil st père", "Mesnil st père 2"))
 
 # filtre colonnes vides
 prairie_sp_ACP <- prairie_sp_ACP[, colSums(prairie_sp_ACP != 0) > 0]
@@ -20,6 +20,8 @@ summary(res.pca)
 ACP <- fviz_pca_ind(res.pca,habillage = prairie_sp_ACP$Parcelles, addEllipses = TRUE, geom = "point")
 ?fviz_pca_ind
 ACP
+
+
 
 #Test stats diff. parcelles
 randtest(bca(res.pca,fac = as.factor(prairie_sp_ACP$Parcelles), nf = 4, scannf = F))
