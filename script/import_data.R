@@ -2,15 +2,15 @@
 
 #import raw ----
 
-prairie_sp <- read_excel("raw/Relevés_CISE_Prairie",
+prairie_sp <- read_excel("raw/Relevés_CISE_Prairie.xlsx",
            sheet = "Relevés_espèce",
            col_names = TRUE)
 
-site_info <- read_excel("raw/Relevés_CISE_Prairie",
+site_info <- read_excel("raw/Relevés_CISE_Prairie.xlsx",
                         sheet = "Info_relevés",
                         col_names = TRUE)
 
-list_sp <- read_excel("raw/Relevés_CISE_Prairie",
+list_sp <- read_excel("raw/Relevés_CISE_Prairie.xlsx",
                       sheet = "Liste_espèce",
                       col_names = TRUE)
 
@@ -24,7 +24,7 @@ prairie_sp_clean <- prairie_sp %>%
 
 ## Remplacer les NA par des 0 ----
 prairie_sp_clean <- prairie_sp_clean %>%
-  mutate_all(~ replace_na(., 0))
+  mutate_all(~ replace_na(.,0))
 
 ## Renommer les colonnes du second tableau ----
 
