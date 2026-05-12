@@ -5,7 +5,8 @@
 prairie_sp <- read_excel("raw/Relevés_CISE_Prairie.xlsx",
            sheet = "Relevés_espèce",
            col_names = TRUE)
-# summary(prairie_sp)
+prairie_sp$Cirarv <- as.numeric(prairie_sp$Cirarv)
+summary(prairie_sp)
 
 site_info <- read_excel("raw/Relevés_CISE_Prairie.xlsx",
                         sheet = "Info_relevés",
@@ -33,12 +34,6 @@ noms_propres <- c("Annees", "Parcelles", "Hauteur_max_(cm)", "Hauteur_moyenne_(c
 
 site_info_clean <- site_info %>%
   set_names(noms_propres)
-
-
-## 
-
-
-
 
 
 
