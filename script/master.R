@@ -12,6 +12,7 @@ library(factoextra)
 library(FactoMineR)
 library(TR8)
 library(rlang)
+library(writexl)
 
 #library() taxonomy ?
 

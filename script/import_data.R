@@ -14,15 +14,25 @@ site_info <- read_excel("raw/Relevés_CISE_Prairie.xlsx",
 
 list_sp <- read_excel("raw/Relevés_CISE_Prairie.xlsx",
                       sheet = "Liste_espèce",
-                      col_names = TRUE)
+                      col_names = FALSE)
 
 #clean data ----
 #:)
 
-##Supprimer les deux dernière colonnes du premier tableau ----
+##Supprimer les deux dernièrea colonnes du premier tableau ----
 
 prairie_sp_clean <- prairie_sp %>%
   select(-c((ncol(prairie_sp) - 1):ncol(prairie_sp)))
+
+##Supprimer la dernière colonnes du tableau espèces ----
+list_sp <- list_sp %>%
+  select(-ncol(list_sp))
+
+# on renomme les colonnes de list_sp 
+list_sp <- list_sp %>%
+  rename(
+    sp_ID = ...1,
+    species = ...2)
 
 ## Remplacer les NA par des 0 ----
 prairie_sp_clean <- prairie_sp_clean %>%
@@ -34,6 +44,15 @@ noms_propres <- c("Annees", "Parcelles", "Hauteur_max_(cm)", "Hauteur_moyenne_(c
 
 site_info_clean <- site_info %>%
   set_names(noms_propres)
+
+
+
+# Export clean table ----
+
+write_xlsx(prairie_sp_clean, path = "output/prairie_sp_clean.xlsx")
+write_xlsx(site_info_clean, path = "output/site_info_clean.xlsx")
+
+
 
 
 
