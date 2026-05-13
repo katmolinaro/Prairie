@@ -85,14 +85,14 @@ bray_dist <- vegdist(donnée_brute_mst, method = "bray")
 as.matrix(bray_dist) 
 
 # Visualiser avec un dendrogramme
-plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre 2019, 2023, 2024, 2026 à Ménil St Pierre 2")
+plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre 2019, 2023, 2024, 2026 à Mesnil St Pierre 2")
 
 
 tree = hclust(bray_dist)
-plot(tree, main = "Dendrogramme de l'indice de Bray-Curtis entre 2019, 2022, 2023, 2026 à Ménil St Pierre 2")
+plot(tree, main = "Dendrogramme de l'indice de Bray-Curtis entre 2019, 2022, 2023, 2026 à Mesnil St Pierre 2")
 rect.hclust(tree,k=4)
 
-
+ 
 
 
 
@@ -123,7 +123,7 @@ bray_dist <- vegdist(donnée_brute_mst, method = "bray")
 as.matrix(bray_dist) 
 
 # Visualiser avec un dendrogramme
-plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre entre 2019, 2023, 2024, 2026 à Ménil St Pierre 1")
+plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre entre 2019, 2023, 2024, 2026 à Mesnil St Pierre 1")
 
 
 tree = hclust(bray_dist)
