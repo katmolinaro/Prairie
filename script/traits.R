@@ -16,6 +16,26 @@ ell <- c("ell_light_uk", "ell_moist_uk", "ell_pH_uk", "ell_N", "ell_S")
 
 test <- tr8(species_list = c("Poa annua","Holcus lanatus"), download_list = ell, allow_persistent = T)
 
+as_tibble(test@results, rownames = "sp")
+
+# as_tibble(test@results, rownames = "sp") %>% mutate(ell_light_uk = strsplit(ell_light_uk, ";"))
+# as_tibble(test@results, rownames = "sp") %>% mutate(ell_light_uk = lapply(strsplit(ell_light_uk, ";"),as.numeric))
+# as_tibble(test@results, rownames = "sp") %>% mutate(ell_light_uk = unlist(lapply(strsplit(ell_light_uk, ";"),as.numeric)) )
+
+
+as_tibble(test@results, rownames = "sp") %>% mutate(ell_light_uk = mean(unlist(lapply(strsplit(ell_light_uk, ";"),as.numeric))))
+as_tibble(test@results, rownames = "sp") %>% mutate(ell_pH_uk = mean(unlist(lapply(strsplit(gsub("x","",ell_pH_uk), ";"),as.numeric)),na.rm=T))
+
+# Script pour sortir le tableau de results de tr8 et hop
+
+test_table <- as_tibble(test@results, rownames = "sp") %>% 
+  mutate(ell_light_uk = mean(unlist(lapply(strsplit(gsub("x","",ell_light_uk), ";"),as.numeric)),na.rm=T)) %>%
+  mutate(ell_pH_uk = mean(unlist(lapply(strsplit(gsub("x","",ell_pH_uk), ";"),as.numeric)),na.rm=T)) %>%
+  mutate(ell_moist_uk = mean(unlist(lapply(strsplit(gsub("x","",ell_moist_uk), ";"),as.numeric)),na.rm=T)) %>%
+  mutate(ell_N = mean(unlist(lapply(strsplit(gsub("x","",ell_N), ";"),as.numeric)),na.rm=T)) %>%
+  mutate(ell_S = mean(unlist(lapply(strsplit(gsub("x","",ell_S), ";"),as.numeric)),na.rm=T))
+
+
 ################################################################################
 ####              Nettoyage de la syntaxe des noms d'espèces                ####  
 ################################################################################
@@ -34,6 +54,7 @@ list_sp_clean <- list_sp_clean %>%
     species_clean = str_replace_all(species_clean, "_", " ") # on remplace les 
     # underscores par des espaces
   )
+
 
 list_sp_clean %>%
   filter(species != species_clean)
@@ -101,6 +122,38 @@ list_sp_clean <- list_sp_clean %>%
 ####                    Formattage du jeu de données                        ####  
 ################################################################################
 
+#Nous avons species_check$validated_species pour la liste d'espèces
+#Pour la liste de données à récup :
+
+ell <- c("ell_light_uk", "ell_moist_uk", "ell_pH_uk", "ell_N", "ell_S")
+
+# On récupère nos données :
+
+traits <- tr8(species_list = species_check$validated_species, download_list = ell, allow_persistent = T)
+
+#pb avec 2 esp, je les retire pour voir si pb reglé : + RETIRE Carex vulpina car NA en species heck !!!
+
+species_check_rmv <- species_check %>%
+  filter_out(validated_species == c("Cynosurus cristatus", "Myosotis")) %>%
+  filter_out(species == "Carex vulpina")
+
+#On re test
+
+traits <- tr8(species_list = species_check_rmv$validated_species, download_list = ell, allow_persistent = T)
+
+# traits_test <- tr8(species_list = species_check_rmv$validated_species[1:35], download_list = ell, synonyms = FALSE, allow_persistent = TRUE)
+# print(traits_test)
+
+#Changement : 
+# Scorzoneroides autumnalis
+# Taraxacum officinale agg.
+# Persicaria bistorta
+# Centaurea x moncktonii = C. nigra x C. jacea
+# Matricaria recutita
+
+
+##########################################################################
+
 # on va juste extraire les manips pour les données qui concernent la collecte de
 # 2026
 prairie_sp_2026 <-prairie_sp_clean %>%
@@ -150,7 +203,8 @@ prairie_sp_2026 <- prairie_sp_2026[, c(
   "Silflo"
   )]
 
-# maintenant on va pivoter le tableau pour avoir une ligne par espèce pour chaque quadrat
+# maintenant on va pivoter le tableau pour avoir une ligne par espèce pour 
+# chaque quadrat
 prairie_sp_2026_long <- prairie_sp_2026 %>%
   pivot_longer(
     cols = -c(Annee, Parcelles, quad_ID),
@@ -182,6 +236,9 @@ prairie_sp_2026_long <- prairie_sp_2026_long[, c(
   "species",
   "abundance"
   )]
+
+# on fait quelques petits changements de noms d'espèces pour les plus chiantes
+
 
 
 ################################################################################
