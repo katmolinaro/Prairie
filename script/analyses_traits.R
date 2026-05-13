@@ -19,42 +19,66 @@ traits_parcelles <- prairie_sp_2026_long %>%
 ### Analyses
 #première anova pour savoir si on a des différences de traits entre les parcelles + vérification conditions application
 #pour N
-N <- aov(N_par_parcelle~parcelle, data =)
+N <- aov(final_N~zone, data =traits_parcelles)
 plot(N)
-bartlett.test(N$residuals, dataset$parcelle)
 #si conditions violées > Kruskall Wallis ou transformation des données
 summary(N)
+TukeyHSD(N, conf.level = 0.95)
 
 #pour lumière
-lumière <- aov(lumière_par_parcelle~parcelle, data =)
+lumière <- aov(final_light~zone, data =traits_parcelles)
 plot(lumière)
-bartlett.test(lumière$residuals, dataset$parcelle)
-
+#si conditions violées > Kruskall Wallis ou transformation des données
 summary(lumière)
+kruskal.test(final_light~zone, data =traits_parcelles)
+TukeyHSD(lumière, conf.level = 0.95)
+kruskalmc(traits_parcelles$final_light, traits_parcelles$zone)
+
 
 #pour pH
-pH <- aov(pH_par_parcelle~parcelle, data =)
+pH <-  aov(final_pH~zone, data =traits_parcelles)
 plot(pH)
-bartlett.test(pH$residuals, dataset$parcelle)
 
 summary(pH)
+kruskal.test(final_pH~zone, data =traits_parcelles)
+TukeyHSD(pH, conf.level = 0.95)
 
 #pour humidité
-humidité <- aov(humidité_par_parcelle~parcelle, data =)
+humidité <- aov(final_hum~zone, data =traits_parcelles)
 plot(humidité)
-bartlett.test(humidité$residuals, dataset$parcelle)
 
 summary(humidité)
+TukeyHSD(humidité, conf.level = 0.95)
 
-#Analyses post hoc (si on garde ANOVA, si on passe sur KS > kruskalmc(dataset$trait, dataset$parcelle, alpha = 0.05/n))
-TukeyHSD(N, conf.level = 0.95)
+kruskal.test(final_hum~zone, data =traits_parcelles)
+
+
+#pour sel
+sel <- aov(final_sel~zone, data =traits_parcelles)
+plot(sel)
+
+summary(sel)
+TukeyHSD(sel, conf.level = 0.95)
+
+
+res.pcatrait26 <- ade4::dudi.pca(traits_parcelles[,-(1:2)], nf = 5, scannf = F)
+summary(res.pcatrait26)
+#Graphes parcelles
+ACP26 <- fviz_pca_ind(res.pcatrait26, habillage = traits_parcelles$zone, addEllipses = T, geom = "point", axes = 1:2)
+ACP26
+
+ACP26 <- fviz_pca_ind(res.pcatrait26, axes = 1:2)
+ACP26
+
+ACP <- fviz_pca_var(res.pcatrait26)
+ACP
 
 
 ### Graphes 
-N_parcelles <-ggplot(praire_data, aes(x = reorder(Parcelles, -elle_N, FUN = mean, na.rm = TRUE),
-                                              y = elle_N,
-                                              fill = Parcelles)) +
-  geom_boxplot(aes(color = Parcelle)) +
+(N_parcelles <-ggplot(traits_parcelles, aes(x = reorder(zone, -final_N, FUN = mean, na.rm = TRUE),
+                                              y = final_N,
+                                              fill = zone)) +
+  geom_boxplot(aes(color = zone)) +
   geom_jitter(size = 1) +
   stat_summary(fun = mean, geom = "crossbar", width = 0.75, color = "black", size = 0.2,linetype = "dashed") +
   theme_minimal() +
@@ -65,8 +89,77 @@ N_parcelles <-ggplot(praire_data, aes(x = reorder(Parcelles, -elle_N, FUN = mean
         axis.text.y = element_text(size = 12),
         axis.title.y = element_text(size = 16, face = "bold"),
         legend.position = "none")
+)
 
-N_parcelles
 
 ggsave("N_parcelles.svg",N_parcelles,width=250,height=200,units=c("mm"),dpi=900,bg="transparent",limitsize = FALSE)
 
+
+
+(light_parcelles <-ggplot(traits_parcelles, aes(x = reorder(zone, -final_light, FUN = mean, na.rm = TRUE),
+                                           y = final_light,
+                                           fill = zone)) +
+  geom_boxplot(aes(color = zone)) +
+  geom_jitter(size = 1) +
+  stat_summary(fun = mean, geom = "crossbar", width = 0.75, color = "black", size = 0.2,linetype = "dashed") +
+  theme_minimal() +
+  #stat_summary(fun = max, geom = "text", aes(label = c(new_letters_Dim1)[factor(SP_valide)]), vjust = -0.5, size = 7) +
+  labs(x = "",
+       y = "Valeurs d'affinité à la lumière") +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust=1, size = 14),
+        axis.text.y = element_text(size = 12),
+        axis.title.y = element_text(size = 16, face = "bold"),
+        legend.position = "none")
+)
+light_parcelles
+
+(sel_parcelles <-ggplot(traits_parcelles, aes(x = reorder(zone, -final_sel, FUN = mean, na.rm = TRUE),
+                                                y = final_sel,
+                                                fill = zone)) +
+    geom_boxplot(aes(color = zone)) +
+    geom_jitter(size = 1) +
+    stat_summary(fun = mean, geom = "crossbar", width = 0.75, color = "black", size = 0.2,linetype = "dashed") +
+    theme_minimal() +
+    #stat_summary(fun = max, geom = "text", aes(label = c(new_letters_Dim1)[factor(SP_valide)]), vjust = -0.5, size = 7) +
+    labs(x = "",
+         y = "Valeurs d'affinité au sel") +
+    theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust=1, size = 14),
+          axis.text.y = element_text(size = 12),
+          axis.title.y = element_text(size = 16, face = "bold"),
+          legend.position = "none")
+)
+sel_parcelles
+
+(pH_parcelles <-ggplot(traits_parcelles, aes(x = reorder(zone, -final_pH, FUN = mean, na.rm = TRUE),
+                                                y = final_pH,
+                                                fill = zone)) +
+    geom_boxplot(aes(color = zone)) +
+    geom_jitter(size = 1) +
+    stat_summary(fun = mean, geom = "crossbar", width = 0.75, color = "black", size = 0.2,linetype = "dashed") +
+    theme_minimal() +
+    #stat_summary(fun = max, geom = "text", aes(label = c(new_letters_Dim1)[factor(SP_valide)]), vjust = -0.5, size = 7) +
+    labs(x = "",
+         y = "Valeurs d'affinité au pH") +
+    theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust=1, size = 14),
+          axis.text.y = element_text(size = 12),
+          axis.title.y = element_text(size = 16, face = "bold"),
+          legend.position = "none")
+)
+pH_parcelles
+
+(hum_parcelles <-ggplot(traits_parcelles, aes(x = reorder(zone, -final_hum, FUN = mean, na.rm = TRUE),
+                                             y = final_hum,
+                                             fill = zone)) +
+    geom_boxplot(aes(color = zone)) +
+    geom_jitter(size = 1) +
+    stat_summary(fun = mean, geom = "crossbar", width = 0.75, color = "black", size = 0.2,linetype = "dashed") +
+    theme_minimal() +
+    #stat_summary(fun = max, geom = "text", aes(label = c(new_letters_Dim1)[factor(SP_valide)]), vjust = -0.5, size = 7) +
+    labs(x = "",
+         y = "Valeurs d'affinité à l'humidité") +
+    theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust=1, size = 14),
+          axis.text.y = element_text(size = 12),
+          axis.title.y = element_text(size = 16, face = "bold"),
+          legend.position = "none")
+)
+hum_parcelles
