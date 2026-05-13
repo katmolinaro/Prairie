@@ -98,14 +98,97 @@ list_sp_clean <- list_sp_clean %>%
   )
 
 ################################################################################
-####                  Extraction des données de traits                      ####  
+####                    Formattage du jeu de données                        ####  
 ################################################################################
 
 # on va juste extraire les manips pour les données qui concernent la collecte de
 # 2026
-
 prairie_sp_2026 <-prairie_sp_clean %>%
-  filter (year == 2026)
+  filter (Annee == 2026)
+
+# et on veut garder que les espèces qu'on a pu observer pendant cette collecte
+# donc on désigne les colonnes species qu'on va devoir filtrer 
+col_species <- names(prairie_sp_2026)[
+  !(names(prairie_sp_2026) %in% c("Annee", "Parcelles"))
+]
+
+# on filtre les colonnes pour lesquelles il n'y a que des valeurs nulles
+col_species_keep <- col_species[
+  colSums(prairie_sp_2026[col_species]) > 0
+]
+
+# on garde que les espèces observées en 2026
+prairie_sp_2026 <- prairie_sp_2026 %>%
+  select(Annee, Parcelles, all_of(col_species_keep))
+
+
+# on va créer une colonne pour l'id des quadrats
+prairie_sp_2026 <- prairie_sp_2026 %>%
+  mutate(quad_ID = row_number())
+
+# on va ré-agencer les colonnes dans le bon ordre à nouveau
+prairie_sp_2026 <- prairie_sp_2026[, c(
+  "Annee",
+  "Parcelles",
+  "quad_ID",
+  "Agrcap", "Ajurep","Alopra","Antodo","Areela",
+  "Belper","Bisoff","Brasp","Brohor",
+  "Capbur","Carhir","Carlep","Carpra","Cenjac","Cerfon","Cirsp","Convarv",
+  "Dacglo",
+  "Equarv",
+  "Lolaru (=Fesaru)",
+  "Fessp",
+  "Galmol","Galver",
+  "Hollan",
+  "Juncus (=Junsp)",
+  "Latpra","Leoaut","Leuvul","Lolper","Lotcor","Luzcam",
+  "Matcha","Mousse","Myodis",
+  "Plalan","Plamaj","Poaann","Poapra","Poatri","Polavi","Potrep",
+  "Ranacr","Ranbul","Ranrep","Rubsp","Rumace",
+  "Taroff","Tridub","Tripra","Trirep",
+  "Veragr","Verarv","vercha","Vichir","Vicsat",
+  "Silflo"
+  )]
+
+# maintenant on va pivoter le tableau pour avoir une ligne par espèce pour chaque quadrat
+prairie_sp_2026_long <- prairie_sp_2026 %>%
+  pivot_longer(
+    cols = -c(Annee, Parcelles, quad_ID),
+    names_to = "species",
+    values_to = "abundance"
+  )
+
+# on va joindre les noms validés proprement aux noms de code
+prairie_sp_2026_long <- prairie_sp_2026_long %>%
+  left_join(list_sp_clean %>% select(sp_ID, validated_species), 
+            by = c("species" = "sp_ID")
+  )
+
+# on va renommer les colonnes 
+prairie_sp_2026_long <- prairie_sp_2026_long %>%
+  rename(
+    year = Annee,
+    zone = Parcelles,
+    sp_ID = species,
+    species = validated_species
+  )
+
+# et les réagencer pour s'y retrouver
+prairie_sp_2026_long <- prairie_sp_2026_long[, c(
+  "year",
+  "zone",
+  "quad_ID",
+  "sp_ID",
+  "species",
+  "abundance"
+  )]
+
+
+################################################################################
+####              Extraction des données de traits spécifiques              ####  
+################################################################################
+
+
 
 ################################################################################
 ####          Jointure entre les données de traits et les données           ####  
