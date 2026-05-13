@@ -24,7 +24,6 @@ list_sp_clean <- list_sp_clean %>%
     # underscores par des espaces
   )
 
-
 list_sp_clean %>%
   filter(species != species_clean)
 # on voit qu'il y a eu 4 lignes pour lesquelles le nettoyage était nécessaire
@@ -61,7 +60,7 @@ list_sp_clean <- list_sp_clean %>%
 # indices des lignes, une avec les noms scientifiques
 species_check <- data.frame(
   ID = seq_along(unique(list_sp_clean$species_clean)),
-  species = unique(list_sp_clean$species_clean)
+  species_clean = unique(list_sp_clean$species_clean)
 )
 
 # on fait tourner TNRS
@@ -81,11 +80,21 @@ species_check <- species_check %>%
 species_check <- species_check %>%
   rename(validated_species = Name_matched)
 
+# on va joindre les noms validés proprement aux noms de code
+list_sp_clean <- list_sp_clean %>%
+  left_join(species_check %>% select(species_clean, validated_species), 
+            by = "species_clean"
+  )
 
 ################################################################################
 ####                  Extraction des données de traits                      ####  
 ################################################################################
 
+# on va juste extraire les manips pour les données qui concernent la collecte de
+# 2026
+
+prairie_sp_2026 <-prairie_sp_clean %>%
+  filter (year == 2026)
 
 ################################################################################
 ####          Jointure entre les données de traits et les données           ####  
