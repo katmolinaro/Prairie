@@ -1,16 +1,22 @@
 
-# Data
+### Data
 
-data$newN <- ellen_N * abondance 
+prairie_sp_2026_long$new_N <- prairie_sp_2026_long$ell_N * prairie_sp_2026_long$abundance
+prairie_sp_2026_long$new_pH <- prairie_sp_2026_long$ell_pH_uk* prairie_sp_2026_long$abundance
+prairie_sp_2026_long$new_light <- prairie_sp_2026_long$ell_light_uk * prairie_sp_2026_long$abundance
+prairie_sp_2026_long$new_sel <- prairie_sp_2026_long$ell_S * prairie_sp_2026_long$abundance
+prairie_sp_2026_long$new_hum <- prairie_sp_2026_long$ell_moist_uk * prairie_sp_2026_long$abundance
 
-traits_parcelles <- data %>%
-  group_by(Parcelles) %>%
-  group_by(Quadrat) %>%
-  mutate(finalN = sum(newN)) %>%
+prairie_sp_2026_long <- na.omit(prairie_sp_2026_long)
+
+traits_parcelles <- prairie_sp_2026_long %>%
+  group_by(zone,quad_ID) %>%
+  summarise(final_N = sum(new_N),final_pH = sum(new_pH), final_sel=sum(new_sel), final_hum=sum(new_hum),
+            final_light=sum(new_light)) %>%
   ungroup()
 
 
-# Analyses
+### Analyses
 #première anova pour savoir si on a des différences de traits entre les parcelles + vérification conditions application
 #pour N
 N <- aov(N_par_parcelle~parcelle, data =)
@@ -44,7 +50,7 @@ summary(humidité)
 TukeyHSD(N, conf.level = 0.95)
 
 
-# Graphes 
+### Graphes 
 N_parcelles <-ggplot(praire_data, aes(x = reorder(Parcelles, -elle_N, FUN = mean, na.rm = TRUE),
                                               y = elle_N,
                                               fill = Parcelles)) +
@@ -64,3 +70,21 @@ N_parcelles
 
 ggsave("N_parcelles.svg",N_parcelles,width=250,height=200,units=c("mm"),dpi=900,bg="transparent",limitsize = FALSE)
 
+
+#covariance des traits
+trait_data <- data.frame(N = traits_parcelles$final_N,
+                         light = traits_parcelles$final_light,
+                         humidité = traits_parcelles$final_hum,
+                         sel = traits_parcelles$final_sel,
+                         pH = traits_parcelles$final_pH)
+
+heatmap <- rcorr(as.matrix(trait_data), type="pearson") 
+ggcorrplot(heatmap$r, hc.order = FALSE, 
+           type = "lower", 
+           lab = TRUE,
+           lab_size = 8, 
+           tl.cex = 19,
+           method="square", 
+           tl.col = "black",
+           colors = c("blue", "white", "red"), 
+           ggtheme=theme_bw)

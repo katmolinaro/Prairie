@@ -5,6 +5,7 @@ echantillon_2026 <- prairie_sp_clean %>% filter(Annee %in% c("2026"))
 #prairie_sp_26 <- prairie_sp_clean %>% filter(Annee %in% c("2026"))
 echantillon_2026<- echantillon_2026[, colSums(echantillon_2026 != 0) > 0]
 View(echantillon_2026)
+echantillon_2026 <- echantillon_2026[-c(16, 24), ]#retirer les deux valeurs en bordure de parcelle Gite 
 
 #________________________________________________________________
 samp26_Gp <- echantillon_2026 %>% filter( Parcelles %in% c("Grande parcelle"))
