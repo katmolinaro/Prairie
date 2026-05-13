@@ -1,10 +1,43 @@
 
-# Data
+### Data
 
+data$newN <- ellen_N * abondance
+data$newpH <- ellen_pH* abondance
+data$newLum <- ellen_Lum * abondance
+data$newSel <- ellen_Sel * abondance
+data$newHum <- ellen_Hum * abondance
 
+traits_parcelles <- data %>%
+  group_by(Parcelles) %>%
+  group_by(Quadrat) %>%
+  mutate(finalN = sum(newN)) %>%
+  ungroup()
 
+traits_parcelles$finalpH <- data %>%
+  group_by(Parcelles) %>%
+  group_by(Quadrat) %>%
+  mutate(finalpH = sum(newN)) %>%
+  ungroup()
 
-# Analyses
+traits_parcelles$finalLum <- data %>%
+  group_by(Parcelles) %>%
+  group_by(Quadrat) %>%
+  mutate(finalLum = sum(newLum)) %>%
+  ungroup()
+
+traits_parcelles$finalSel <- data %>%
+  group_by(Parcelles) %>%
+  group_by(Quadrat) %>%
+  mutate(finalSel = sum(newSel)) %>%
+  ungroup()
+
+traits_parcelles$finalHum <- data %>%
+  group_by(Parcelles) %>%
+  group_by(Quadrat) %>%
+  mutate(finalHum = sum(newHum)) %>%
+  ungroup()
+
+### Analyses
 #première anova pour savoir si on a des différences de traits entre les parcelles + vérification conditions application
 #pour N
 N <- aov(N_par_parcelle~parcelle, data =)
@@ -38,7 +71,7 @@ summary(humidité)
 TukeyHSD(N, conf.level = 0.95)
 
 
-# Graphes 
+### Graphes 
 N_parcelles <-ggplot(praire_data, aes(x = reorder(Parcelles, -elle_N, FUN = mean, na.rm = TRUE),
                                               y = elle_N,
                                               fill = Parcelles)) +
