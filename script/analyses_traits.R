@@ -1,7 +1,13 @@
 
 # Data
 
+data$newN <- ellen_N * abondance 
 
+traits_parcelles <- data %>%
+  group_by(Parcelles) %>%
+  group_by(Quadrat) %>%
+  mutate(finalN = sum(newN)) %>%
+  ungroup()
 
 
 # Analyses
