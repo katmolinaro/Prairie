@@ -1,30 +1,27 @@
 
 ###
+#2026
 
 # filtre année
 prairie_sp_26 <- prairie_sp_clean %>% filter(Annee %in% c("2026"))
-
 # filtre parcelles
-prairie_sp_ACP <- prairie_sp_26 %>% filter(Parcelles %in% c("Grande parcelle","Chemin blanc", "Gite", "Parcelle regeneree", "Mesnil st père", "Mesnil st père 2"))
-
+prairie_sp_ACP26 <- prairie_sp_26 %>% filter(Parcelles %in% c("Grande parcelle","Chemin blanc", "Gite", "Parcelle regeneree", "Mesnil st père", "Mesnil st père 2"))
+prairie_sp_ACPgite <- prairie_sp_26 %>% filter(Parcelles %in% c("Gite"))
 # filtre colonnes vides
-prairie_sp_ACP <- prairie_sp_ACP[, colSums(prairie_sp_ACP != 0) > 0]
-
-
+prairie_sp_ACP26 <- prairie_sp_ACP26[, colSums(prairie_sp_ACP26 != 0) > 0]
 
 # Réaliser l'ACP
-res.pca <- ade4::dudi.pca(prairie_sp_ACP[,-(1:2)], nf = 5, scannf = F)
+res.pca26 <- ade4::dudi.pca(prairie_sp_ACP26[,-(1:2)], nf = 5, scannf = F)
 summary(res.pca)
-
 #Graphes parcelles
-ACP <- fviz_pca_ind(res.pca,habillage = prairie_sp_ACP$Parcelles, addEllipses = TRUE, geom = "point")
-?fviz_pca_ind
-ACP
-
-
-
+ACP26 <- fviz_pca_ind(res.pca26, habillage = prairie_sp_26$Parcelles, addEllipses = T, geom = "point", axes = 2:3)
+ACP26
 #Test stats diff. parcelles
-randtest(bca(res.pca,fac = as.factor(prairie_sp_ACP$Parcelles), nf = 4, scannf = F))
+randtest(bca(res.pca26,fac = as.factor(prairie_sp_ACP26$Parcelles), nf = 6, scannf = F))
+
+
+
+fviz_contrib(res.pca26, choice = "var", axes = 2)
 
 
 
@@ -39,6 +36,181 @@ randtest(bca(res.pca,fac = as.factor(prairie_sp_ACP$Parcelles), nf = 4, scannf =
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 
+#2024
+
+# filtre année
+prairie_sp_24 <- prairie_sp_clean %>% filter(Annee %in% c("2024"))
+# filtre parcelles
+prairie_sp_ACP24 <- prairie_sp_24 %>% filter(Parcelles %in% c("Grande parcelle","Chemin blanc", "Gite", "Parcelle regeneree", "Mesnil st père", "Mesnil st père 2"))
+# filtre colonnes vides
+prairie_sp_ACP24 <- prairie_sp_ACP24[, colSums(prairie_sp_ACP24 != 0) > 0]
+
+# Réaliser l'ACP
+res.pca24 <- ade4::dudi.pca(prairie_sp_ACP24[,-(1:2)], nf = 5, scannf = F)
+summary(res.pca)
+#Graphes parcelles
+ACP24 <- fviz_pca_ind(res.pca24, habillage = prairie_sp_ACP24$Parcelles, addEllipses = TRUE, geom = "point")
+ACP24
+#Test stats diff. parcelles
+randtest(bca(res.pca24,fac = as.factor(prairie_sp_ACP24$Parcelles), nf = 6, scannf = F))
+
+
+### 
+#2023
+
+# filtre année
+prairie_sp_23 <- prairie_sp_clean %>% filter(Annee %in% c("2023"))
+# filtre parcelles
+prairie_sp_ACP23 <- prairie_sp_23 %>% filter(Parcelles %in% c("Grande parcelle","Chemin blanc", "Gite", "Parcelle regeneree", "Mesnil st père", "Mesnil st père 2"))
+# filtre colonnes vides
+prairie_sp_ACP23 <- prairie_sp_ACP23[, colSums(prairie_sp_ACP23 != 0) > 0]
+
+# Réaliser l'ACP
+res.pca23 <- ade4::dudi.pca(prairie_sp_ACP23[,-(1:2)], nf = 5, scannf = F)
+summary(res.pca)
+#Graphes parcelles
+ACP23 <- fviz_pca_ind(res.pca23, habillage = prairie_sp_ACP23$Parcelles, addEllipses = TRUE, geom = "point")
+ACP23
+#Test stats diff. parcelles
+randtest(bca(res.pca23,fac = as.factor(prairie_sp_ACP23$Parcelles), nf = 4, scannf = F))
+
+
+### 
+#2022
+
+# filtre année
+prairie_sp_22 <- prairie_sp_clean %>% filter(Annee %in% c("2022"))
+# filtre parcelles
+prairie_sp_ACP22 <- prairie_sp_22 %>% filter(Parcelles %in% c("Grande parcelle","Chemin blanc", "Gite", "Parcelle regeneree", "Mesnil st père", "Mesnil st père 2"))
+# filtre colonnes vides
+prairie_sp_ACP22 <- prairie_sp_ACP22[, colSums(prairie_sp_ACP22 != 0) > 0]
+
+# Réaliser l'ACP
+res.pca22 <- ade4::dudi.pca(prairie_sp_ACP22[,-(1:2)], nf = 5, scannf = F)
+summary(res.pca)
+#Graphes parcelles
+ACP22 <- fviz_pca_ind(res.pca22, habillage = prairie_sp_ACP22$Parcelles, addEllipses = TRUE, geom = "point")
+ACP22
+#Test stats diff. parcelles
+randtest(bca(res.pca22,fac = as.factor(prairie_sp_ACP22$Parcelles), nf = 4, scannf = F))
+
+
+
+
+
+
+
+
+
+
+
+# Liste pour stocker les résultats des ACP
+list_graphes <- list()  # Pour les graphes ACP
+list_pvalues <- list()  # Pour les p-values
+
+# Boucle sur les années
+for (annee in 2007:2026) {
+    # Filtrer par année
+    prairie_sp_annee <- prairie_sp_clean %>% filter(Annee == as.character(annee))
+    
+    # Filtrer par parcelles
+    prairie_sp_ACP <- prairie_sp_annee %>% filter(Parcelles %in% c("Grande parcelle","Chemin blanc", "Gite", "Parcelle regeneree", "Mesnil st père", "Mesnil st père 2"))
+    
+    # Supprimer les colonnes vides
+    prairie_sp_ACP <- prairie_sp_ACP[, colSums(prairie_sp_ACP != 0) > 0]
+    
+    # Vérifier qu'il reste des données
+    if (nrow(prairie_sp_ACP) > 0 && ncol(prairie_sp_ACP) > 2) {
+      # Réaliser l'ACP
+      res.pca <- ade4::dudi.pca(prairie_sp_ACP[, -(1:2)], nf = 5, scannf = FALSE)
+      
+      # --- Test statistique ---
+      # Vérifier qu'il y a au moins 2 groupes pour le test
+      if (length(unique(prairie_sp_ACP$Parcelles)) >= 2) {
+        test_result <- randtest(
+          bca(res.pca, fac = as.factor(prairie_sp_ACP$Parcelles), nf = 4, scannf = FALSE)
+        )
+        p_value <- test_result$p.value
+        list_pvalues[[paste0("PValue_", annee)]] <- p_value
+        cat("Année", annee, "| p-value :", p_value, "\n")
+      } else {
+        cat("Année", annee, "| Pas assez de groupes pour le test\n")
+        list_pvalues[[paste0("PValue_", annee)]] <- NA
+      }
+      
+      # --- Graphe ACP ---
+      graphe_annee <- fviz_pca_ind(
+        res.pca,
+        habillage = prairie_sp_ACP$Parcelles,
+        addEllipses = TRUE,
+        geom = "point",
+        title = paste("ACP", annee)
+      )
+      
+      # Stocker le graphe
+      list_graphes[[paste0("ACP_", annee)]] <- graphe_annee
+      
+    } else {
+      cat("Pas assez de données pour l'année", annee, "\n")
+      list_pvalues[[paste0("PValue_", annee)]] <- NA
+    }
+}
+
+
+# Combiner les graphes avec patchwork
+graphe_final <- do.call(`+`, list_graphes)
+
+# Afficher les graphes
+print(graphe_final)
+
+
+# Extraire les p-values et les stocker dans un data frame
+df_tests <- data.frame(
+  Annee = character(),
+  PValue = numeric(),
+  stringsAsFactors = FALSE
+)
+
+for (annee in 2007:2026) {
+  test_key <- paste0("Test_", annee)
+  if (test_key %in% names(list_tests)) {
+    test_result <- list_tests[[test_key]]
+    df_tests <- rbind(
+      df_tests,
+      data.frame(
+        Annee = annee,
+        PValue = test_result$p.value
+      )
+    )
+  }
+}
+
+# Afficher le tableau des p-values
+print(df_tests)
 
 
 
