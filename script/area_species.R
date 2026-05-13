@@ -77,6 +77,44 @@ plot(test2, ylab = "Nombre d'espèces", xlab = "Nombre de sites")
 
 #_________________________________________________________________
 
+samp26_MsP1= echantillon_2026 %>% filter( Parcelles %in% c("Mesnil st père"))
+
+
+samp26_MsP1 <- samp26_MsP1 %>%
+  select(-c(1,2))
+
+
+
+test <- specaccum(samp26_MsP1, method = "exact")
+test1 <- specaccum(samp26_MsP1, method = "random")
+test2 <- specaccum(samp26_MsP1, method = "coleman")
+
+plot(test, ylab = "Nombre d'espèces", xlab = "Nombre de sites")
+plot(test1, ylab = "Nombre d'espèces", xlab = "Nombre de sites")
+plot(test2, ylab = "Nombre d'espèces", xlab = "Nombre de sites")
+
+#_________________________________________________________________
+
+samp26_MsP2= echantillon_2026 %>% filter( Parcelles %in% c("Mesnil st père 2"))
+
+
+samp26_MsP2 <- samp26_MsP2 %>%
+  select(-c(1,2))
+
+
+
+test <- specaccum(samp26_MsP2, method = "exact")
+test1 <- specaccum(samp26_MsP2, method = "random")
+test2 <- specaccum(samp26_MsP2, method = "coleman")
+
+plot(test, ylab = "Nombre d'espèces", xlab = "Nombre de sites")
+plot(test1, ylab = "Nombre d'espèces", xlab = "Nombre de sites")
+plot(test2, ylab = "Nombre d'espèces", xlab = "Nombre de sites")
+
+
+
+#_________________________________________________________________
+
 ### Version d'origine ###
 
 
