@@ -58,7 +58,11 @@ samp26_MsP2 <- samp26_MsP2 %>%
   select(-c(1,2))
 
 test1_MsP2 <- specaccum(samp26_MsP2, method = "random")
+
 #_________________________________________________________________
+
+plot(test1_MsP2, ci.type = "line", col = "blue", lwd = 2,
+      ci.lty = 1)
 
 layout(matrix(c(1,2,3,4,5,6),2,3))
 plot(test1_Gp, ylab = "Nombre d'espèces", xlab = "Nombre de sites", main = "Grande Parcelle")
@@ -67,3 +71,10 @@ plot(test1_Pr, ylab = "Nombre d'espèces", xlab = "Nombre de sites", main = "Par
 plot(test1_Cb, ylab = "Nombre d'espèces", xlab = "Nombre de sites", main = "Chemin blanc")
 plot(test1_MsP1, ylab = "Nombre d'espèces", xlab = "Nombre de sites", main = "Mesnil st père")
 plot(test1_MsP2, ylab = "Nombre d'espèces", xlab = "Nombre de sites", main ="Mesnil st père 2")
+
+specpool(samp26_Gp)
+specpool(samp26_Pr)
+specpool(samp26_G)
+specpool(samp26_Cb)
+specpool(samp26_MsP1)
+specpool(samp26_MsP2)
