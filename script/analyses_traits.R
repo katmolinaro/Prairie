@@ -95,6 +95,7 @@ ACP
 ggsave("N_parcelles.svg",N_parcelles,width=250,height=200,units=c("mm"),dpi=900,bg="transparent",limitsize = FALSE)
 
 
+<<<<<<< HEAD
 
 (light_parcelles <-ggplot(traits_parcelles, aes(x = reorder(zone, -final_light, FUN = mean, na.rm = TRUE),
                                            y = final_light,
@@ -163,3 +164,21 @@ pH_parcelles
           legend.position = "none")
 )
 hum_parcelles
+
+#covariance des traits
+trait_data <- data.frame(N = traits_parcelles$final_N,
+                         light = traits_parcelles$final_light,
+                         humidité = traits_parcelles$final_hum,
+                         sel = traits_parcelles$final_sel,
+                         pH = traits_parcelles$final_pH)
+
+heatmap <- rcorr(as.matrix(trait_data), type="pearson") 
+ggcorrplot(heatmap$r, hc.order = FALSE, 
+           type = "lower", 
+           lab = TRUE,
+           lab_size = 8, 
+           tl.cex = 19,
+           method="square", 
+           tl.col = "black",
+           colors = c("blue", "white", "red"), 
+           ggtheme=theme_bw)
