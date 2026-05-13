@@ -150,7 +150,8 @@ prairie_sp_2026 <- prairie_sp_2026[, c(
   "Silflo"
   )]
 
-# maintenant on va pivoter le tableau pour avoir une ligne par espèce pour chaque quadrat
+# maintenant on va pivoter le tableau pour avoir une ligne par espèce pour 
+# chaque quadrat
 prairie_sp_2026_long <- prairie_sp_2026 %>%
   pivot_longer(
     cols = -c(Annee, Parcelles, quad_ID),
@@ -182,6 +183,9 @@ prairie_sp_2026_long <- prairie_sp_2026_long[, c(
   "species",
   "abundance"
   )]
+
+# on fait quelques petits changements de noms d'espèces pour les plus chiantes
+
 
 
 ################################################################################
