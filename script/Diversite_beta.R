@@ -1,3 +1,6 @@
+##### Script calcul indice Bray-Curtis diversité bêta sur moyennes des parcelles #####
+library(tidyverse)
+
 ##Garder que les données 2026
 données_2026 <- prairie_sp_clean %>% 
   filter(Annee == "2026")
@@ -25,7 +28,38 @@ as.matrix(bray_dist)
 plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes parcelles", )
 
 
-##Garder que les données grande prairie 26
+##### Script calcul indice Bray-Curtis diversité bêta sur moyennes des parcelles #####
+
+##Garder que les données 2026
+données_2026 <- prairie_sp_clean %>% 
+  filter(Annee == "2026")
+
+# Changer les noms des lignes pour avoir id_parcelle
+quadrats_2026 <- données_2026 %>%
+  group_by(Parcelles) %>%
+  mutate(id = paste0(row_number(), "_", Parcelles))%>%
+  ungroup() %>%
+  column_to_rownames("id")
+
+#Garder que les données utilisables et nommer les parcelles
+donnée_brute <- quadrats_2026 %>%
+  select(-c(1:2))
+
+# Calculer la matrice de dissimilarité de Bray-Curtis entre les moyennes des différentes parcelles
+bray_dist <- vegdist(donnée_brute, method = "bray")
+
+# Convertir en matrice complète
+as.matrix(bray_dist) 
+
+# Visualiser avec un dendrogramme
+plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes quadrats", )
+
+
+
+
+##### Test variation moyennes des indices de Bray-Curtis entre les parselles #####
+
+##Garder que les données gite 26
 gite_26 <- données_2026 %>% 
   filter(Parcelles == "Gite")
 
@@ -35,6 +69,12 @@ gite_26 <- gite_26 %>%
 
 # Calculer la matrice de dissimilarité de Bray-Curtis entre les quadrats de la parcelle Gites
 bray_dist_gite <- vegdist(gite_26, method = "bray")
+
+#Calculer la matrice de dissimilarité de Jaccard
+bray_dist_gite <- vegdist(gite_26, method = "jaccard")
+
+#Calculer la matrice de dissimilarité de Sorensen 
+bray_dist_gite <- vegdist(gite_26, method = "binary")
 
 # Calculer la moyenne de l'indice de Bray-Curtis
 moyenne_gite <- mean(bray_dist_gite)
@@ -47,23 +87,45 @@ as.matrix(bray_dist_gite)
 plot(hclust(bray_dist_gite), main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes parcelles", )
 
 ##Garder que les données grande prairie 26
-gite_26 <- données_2026 %>% 
-  filter(Parcelles == "Gite")
+grprairie_26 <- données_2026 %>% 
+  filter(Parcelles == "Grande parcelle")
 
 #Garder que les données utilisables
-gite_26 <- gite_26 %>%
+grprairie_26 <- grprairie_26 %>%
   select(-c(1:2))
 
 # Calculer la matrice de dissimilarité de Bray-Curtis entre les quadrats de la parcelle Gites
-bray_dist_gite <- vegdist(gite_26, method = "bray")
+bray_dist_grp <- vegdist(grprairie_26, method = "bray")
+
+#Calculer la matrice de dissimilarité de Jaccard
+bray_dist_grp <- vegdist(grprairie_26>0, method = "jaccard")
 
 # Calculer la moyenne de l'indice de Bray-Curtis
-moyenne_gite <- mean(bray_dist_gite)
-print(moyenne_gite)
+moyenne_grp <- mean(bray_dist_grp)
+print(moyenne_grp)
 
 # Convertir en matrice complète
-as.matrix(bray_dist_gite)
+as.matrix(bray_dist_grp)
 
 # Visualiser avec un dendrogramme
-plot(hclust(bray_dist_gite), main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes parcelles", )
+plot(hclust(bray_dist_grp), main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes parcelles", )
 
+
+
+## Garder que les données grande prairie 26
+mstprairie_26 <- données_2026 %>% 
+  filter(Parcelles == "Mesnil st père 2")
+
+# Garder que les données utilisables
+mstprairie_26 <- mstprairie_26 %>%
+  select(-c(1:2))
+
+# Calculer la matrice de dissimilarité de Bray-Curtis entre les quadrats de la parcelle Gites
+bray_dist_mst <- vegdist(mstprairie_26, method = "bray")
+
+#Calculer la matrice de dissimilarité de Jaccard
+bray_dist_mst <- vegdist(mstprairie_26>0, method = "jaccard")
+
+# Calculer la moyenne de l'indice de Bray-Curtis
+moyenne_mst <- mean(bray_dist_mst)
+print(moyenne_mst)
