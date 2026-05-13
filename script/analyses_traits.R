@@ -1,41 +1,20 @@
 
 ### Data
 
-data$newN <- ellen_N * abondance
-data$newpH <- ellen_pH* abondance
-data$newLum <- ellen_Lum * abondance
-data$newSel <- ellen_Sel * abondance
-data$newHum <- ellen_Hum * abondance
+prairie_sp_2026_long$new_N <- prairie_sp_2026_long$ell_N * prairie_sp_2026_long$abundance
+prairie_sp_2026_long$new_pH <- prairie_sp_2026_long$ell_pH_uk* prairie_sp_2026_long$abundance
+prairie_sp_2026_long$new_light <- prairie_sp_2026_long$ell_light_uk * prairie_sp_2026_long$abundance
+prairie_sp_2026_long$new_sel <- prairie_sp_2026_long$ell_S * prairie_sp_2026_long$abundance
+prairie_sp_2026_long$new_hum <- prairie_sp_2026_long$ell_moist_uk * prairie_sp_2026_long$abundance
 
-traits_parcelles <- data %>%
-  group_by(Parcelles) %>%
-  group_by(Quadrat) %>%
-  mutate(finalN = sum(newN)) %>%
+prairie_sp_2026_long <- na.omit(prairie_sp_2026_long)
+
+traits_parcelles <- prairie_sp_2026_long %>%
+  group_by(zone,quad_ID) %>%
+  summarise(final_N = sum(new_N),final_pH = sum(new_pH), final_sel=sum(new_sel), final_hum=sum(new_hum),
+            final_light=sum(new_light)) %>%
   ungroup()
 
-traits_parcelles$finalpH <- data %>%
-  group_by(Parcelles) %>%
-  group_by(Quadrat) %>%
-  mutate(finalpH = sum(newN)) %>%
-  ungroup()
-
-traits_parcelles$finalLum <- data %>%
-  group_by(Parcelles) %>%
-  group_by(Quadrat) %>%
-  mutate(finalLum = sum(newLum)) %>%
-  ungroup()
-
-traits_parcelles$finalSel <- data %>%
-  group_by(Parcelles) %>%
-  group_by(Quadrat) %>%
-  mutate(finalSel = sum(newSel)) %>%
-  ungroup()
-
-traits_parcelles$finalHum <- data %>%
-  group_by(Parcelles) %>%
-  group_by(Quadrat) %>%
-  mutate(finalHum = sum(newHum)) %>%
-  ungroup()
 
 ### Analyses
 #première anova pour savoir si on a des différences de traits entre les parcelles + vérification conditions application
