@@ -5,17 +5,45 @@
 
 
 # Analyses
+#première anova pour savoir si on a des différences de traits entre les parcelles + vérification conditions application
+#pour N
+N <- aov(N_par_parcelle~parcelle, data =)
+plot(N)
+bartlett.test(N$residuals, dataset$parcelle)
+#si conditions violées > Kruskall Wallis ou transformation des données
+summary(N)
 
+#pour lumière
+lumière <- aov(lumière_par_parcelle~parcelle, data =)
+plot(lumière)
+bartlett.test(lumière$residuals, dataset$parcelle)
 
+summary(lumière)
 
+#pour pH
+pH <- aov(pH_par_parcelle~parcelle, data =)
+plot(pH)
+bartlett.test(pH$residuals, dataset$parcelle)
+
+summary(pH)
+
+#pour humidité
+humidité <- aov(humidité_par_parcelle~parcelle, data =)
+plot(humidité)
+bartlett.test(humidité$residuals, dataset$parcelle)
+
+summary(humidité)
+
+#Analyses post hoc (si on garde ANOVA, si on passe sur KS > kruskalmc(dataset$trait, dataset$parcelle, alpha = 0.05/n))
+TukeyHSD(N, conf.level = 0.95)
 
 
 # Graphes 
-
 N_parcelles <-ggplot(praire_data, aes(x = reorder(Parcelles, -elle_N, FUN = mean, na.rm = TRUE),
                                               y = elle_N,
                                               fill = Parcelles)) +
-  geom_boxplot() +
+  geom_boxplot(aes(color = Parcelle)) +
+  geom_jitter(size = 1) +
   stat_summary(fun = mean, geom = "crossbar", width = 0.75, color = "black", size = 0.2,linetype = "dashed") +
   theme_minimal() +
   #stat_summary(fun = max, geom = "text", aes(label = c(new_letters_Dim1)[factor(SP_valide)]), vjust = -0.5, size = 7) +
