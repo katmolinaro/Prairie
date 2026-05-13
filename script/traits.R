@@ -92,7 +92,6 @@ list_sp_clean <- list_sp_clean %>%
 # indices des lignes, une avec les noms scientifiques
 species_check <- data.frame(
   ID = seq_along(unique(list_sp_clean$species_clean)),
-  species = unique(list_sp_clean$species_clean)
   species_clean = unique(list_sp_clean$species_clean)
 )
 
@@ -120,7 +119,6 @@ list_sp_clean <- list_sp_clean %>%
   )
 
 ################################################################################
-####                  Extraction des données de traits                      ####  
 ####                    Formattage du jeu de données                        ####  
 ################################################################################
 
