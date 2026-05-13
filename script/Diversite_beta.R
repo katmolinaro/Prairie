@@ -52,7 +52,82 @@ bray_dist <- vegdist(donnée_brute, method = "bray")
 as.matrix(bray_dist) 
 
 # Visualiser avec un dendrogramme
-plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes quadrats", )
+tree = hclust(bray_dist)
+plot(tree, main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes parcelles")
+rect.hclust(tree, k=4)
+
+
+
+##### Différence de diversité Bêta sur Ménil St Pierre 2 entre 2019 et 2026 #####
+##Garder que les données 2019, 2023, 2024, 2026
+données_2619 <- prairie_sp_clean %>% 
+  filter(Annee %in% c("2026", "2019", "2023", "2024"))
+
+##Garder que les données Ménil st père 2
+menilstpere_2 <- données_2619 %>% 
+  filter(Parcelles == "Mesnil st père 2")
+
+# Changer les noms des lignes pour avoir id_parcelle
+quadrat_mst <- menilstpere_2 %>%
+  group_by(Parcelles) %>%
+  mutate(id = paste0(row_number(), "_", Annee))%>%
+  ungroup() %>%
+  column_to_rownames("id")
+
+#Garder que les données utilisables et nommer les parcelles
+donnée_brute_mst <- quadrat_mst %>%
+  select(-c(1:2))
+
+# Calculer la matrice de dissimilarité de Bray-Curtis entre les moyennes des différentes parcelles
+bray_dist <- vegdist(donnée_brute_mst, method = "bray")
+
+# Convertir en matrice complète
+as.matrix(bray_dist) 
+
+# Visualiser avec un dendrogramme
+plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre 2019, 2023, 2024, 2026 à Ménil St Pierre 2")
+
+
+tree = hclust(bray_dist)
+plot(tree, main = "Dendrogramme de l'indice de Bray-Curtis entre 2019, 2022, 2023, 2026 à Ménil St Pierre 2")
+rect.hclust(tree,k=4)
+
+
+
+
+
+##### Différence de diversité Bêta sur Ménil St Pierre 1 entre 2019, 2024 et 2026 #####
+##Garder que les données 2019, 2022, 2024, 2026
+données_261924 <- prairie_sp_clean %>% 
+  filter(Annee %in% c("2026", "2019", "2022", "2024"))
+
+##Garder que les données Ménil st père 2
+menilstpere_1 <- données_261924 %>% 
+  filter(Parcelles == "Mesnil st père")
+
+# Changer les noms des lignes pour avoir id_parcelle
+quadrat_mst <- menilstpere_1 %>%
+  group_by(Parcelles) %>%
+  mutate(id = paste0(row_number(), "_", Annee))%>%
+  ungroup() %>%
+  column_to_rownames("id")
+
+#Garder que les données utilisables et nommer les parcelles
+donnée_brute_mst <- quadrat_mst %>%
+  select(-c(1:2))
+
+# Calculer la matrice de dissimilarité de Bray-Curtis entre les moyennes des différentes parcelles
+bray_dist <- vegdist(donnée_brute_mst, method = "bray")
+
+# Convertir en matrice complète
+as.matrix(bray_dist) 
+
+# Visualiser avec un dendrogramme
+plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre entre 2019, 2023, 2024, 2026 à Ménil St Pierre 1")
+
+
+tree = hclust(bray_dist)
+plot(tree, main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes parcelles")
 
 
 
