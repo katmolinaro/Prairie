@@ -246,20 +246,20 @@ ell <- c("ell_light_uk", "ell_moist_uk", "ell_pH_uk", "ell_N", "ell_S")
 
 #pb avec 2 esp, je les retire pour voir si pb reglé : + RETIRE Carex vulpina car 
 # NA en species heck !!!
-# 
-# species_check_rmv <- species_check %>%
-#   filter_out(validated_species == c("Cynosurus cristatus", "Myosotis")) %>%
-#   filter_out(species_clean == "Carex vulpina") %>%
-#   mutate(
-#     validated_species = case_when(
-#       validated_species == "Leontodon autumnalis" ~ "Scorzoneroides autumnalis",
-#       validated_species == "Taraxacum officinale" ~ "Taraxacum officinale agg.",
-#       validated_species == "Bistorta officinalis" ~ "Persicaria bistorta",
-#       validated_species == "Centaurea jacea" ~ "Centaurea x moncktonii = C. nigra x C. jacea",
-#       validated_species == "Matricaria chamomilla" ~ "Matricaria recutita",
-#       TRUE ~ validated_species
-#     )
-#   )
+
+species_check_rmv <- species_check %>%
+  filter_out(validated_species == c("Cynosurus cristatus", "Myosotis")) %>%
+  filter_out(species_clean == "Carex vulpina") %>%
+  mutate(
+    validated_species = case_when(
+      validated_species == "Leontodon autumnalis" ~ "Scorzoneroides autumnalis",
+      validated_species == "Taraxacum officinale" ~ "Taraxacum officinale agg.",
+      validated_species == "Bistorta officinalis" ~ "Persicaria bistorta",
+      validated_species == "Centaurea jacea" ~ "Centaurea x moncktonii = C. nigra x C. jacea",
+      validated_species == "Matricaria chamomilla" ~ "Matricaria recutita",
+      TRUE ~ validated_species
+    )
+  )
 # ça marche pour la chamomille et bistorta mais le reste naur sadddd
 
 #On re test
@@ -332,6 +332,23 @@ prairie_sp_2019 <- prairie_sp_2019 %>%
 prairie_sp_2019 <- prairie_sp_2019 %>%
   mutate(quad_ID = row_number())
 
+# on va ré-agencer les colonnes dans le bon ordre à nouveau
+prairie_sp_2019 <- prairie_sp_2019[, c(
+  "Annee",
+  "Parcelles",
+  "quad_ID",
+  "Achmil",  "Ajurep",  "Alopra",  "Antodo", "Astsp",   "Belper",  "Broere",
+  "Brohor",  "Broram",  "Capbur",  "Carhir" , "Cenjac",  "Cerfon",  "Cirsp" , 
+  "Convarv", "Crecap",  "Cyncri",  "Dacglo",  "Daucar",  "Fespra" , "Galmol" ,
+  "Galver",  "Gerdis",  "Hiesp" ,  "Hollan",  "Latpra" , "Latsp" ,  "Leuvul" ,
+  "Lolper",  "Lotcor",  "Lotuli",  "Luzcam",  "Lycflo"  ,"Lysnum",  "Lysvul" ,
+  "Mousse",  "Phlpra",  "Plamaj",  "Poaann",  "Poapra",  "Poatri" , "Potrep" ,
+  "Pruspi",  "Ranacr",  "Ranbul",  "Ranrep",  "Rhimin" , "Rumacu",  "Rumobt" ,
+  "Salsp" ,  "Stehos",  "Trapra" , "Tridub",  "Tripra"  ,"Trirep"  ,"Veralc" ,
+  "vercha",  "Veroff",  "Vicbis" , "Vicsat",  "Vicsep",  "Lotped" 
+)]
+
+
 # maintenant on va pivoter le tableau pour avoir une ligne par espèce pour 
 # chaque quadrat
 prairie_sp_2019_long <- prairie_sp_2019 %>%
@@ -366,103 +383,121 @@ prairie_sp_2019_long <- prairie_sp_2019_long[, c(
   "abundance"
   )]
 
-# on fait quelques petits changements de noms d'espèces pour les plus chiantes
-prairie_sp_2019_long <- prairie_sp_2019_long %>%
-  mutate(
-    species = case_when(
-      species == "Leontodon autumnalis" ~ "Scorzoneroides autumnalis",
-      species == "Taraxacum officinale" ~ "Taraxacum officinale agg.",
-      species == "Bistorta officinalis" ~ "Persicaria bistorta",
-      species == "Matricaria chamomilla" ~ "Matricaria recutita",
-      TRUE ~ species
-      )
-    ) %in% c("Annee", "Parcelles")
-
-# on filtre les colonnes pour lesquelles il n'y a que des valeurs nulles
-col_species_keep <- col_species[
-  colSums(prairie_sp_2019[col_species]) > 0
-]
-
-# on garde que les espèces observées en 2019
-prairie_sp_2019 <- prairie_sp_2019 %>%
-  select(Annee, Parcelles, all_of(col_species_keep))
+# # on filtre les colonnes pour lesquelles il n'y a que des valeurs nulles
+# col_species_keep <- col_species[
+#   colSums(prairie_sp_2019[col_species]) > 0
+# ]
+# 
+# # on garde que les espèces observées en 2019
+# prairie_sp_2019 <- prairie_sp_2019 %>%
+#   select(Annee, Parcelles, all_of(col_species_keep))
+# 
+# 
+# # on va créer une colonne pour l'id des quadrats
+# prairie_sp_2019 <- prairie_sp_2019 %>%
+#   mutate(quad_ID = row_number())
 
 
-# on va créer une colonne pour l'id des quadrats
-prairie_sp_2019 <- prairie_sp_2019 %>%
-  mutate(quad_ID = row_number())
-
-# on va ré-agencer les colonnes dans le bon ordre à nouveau
-prairie_sp_2019 <- prairie_sp_2019[, c(
-  "Annee",
-  "Parcelles",
-  "quad_ID",
-  "Agrcap", "Ajurep","Alopra","Antodo","Areela",
-  "Belper","Bisoff","Brasp","Brohor",
-  "Capbur","Carhir","Carlep","Carpra","Cenjac","Cerfon","Cirsp","Convarv",
-  "Dacglo",
-  "Equarv",
-  "Lolaru (=Fesaru)",
-  "Fessp",
-  "Galmol","Galver",
-  "Hollan",
-  "Juncus (=Junsp)",
-  "Latpra","Leoaut","Leuvul","Lolper","Lotcor","Luzcam",
-  "Matcha","Mousse","Myodis",
-  "Plalan","Plamaj","Poaann","Poapra","Poatri","Polavi","Potrep",
-  "Ranacr","Ranbul","Ranrep","Rubsp","Rumace",
-  "Taroff","Tridub","Tripra","Trirep",
-  "Veragr","Verarv","vercha","Vichir","Vicsat",
-  "Silflo"
-)]
-
-# maintenant on va pivoter le tableau pour avoir une ligne par espèce pour 
-# chaque quadrat
-prairie_sp_2019_long <- prairie_sp_2019 %>%
-  pivot_longer(
-    cols = -c(Annee, Parcelles, quad_ID),
-    names_to = "species",
-    values_to = "abundance"
-  )
-
-# on va joindre les noms validés proprement aux noms de code
-prairie_sp_2019_long <- prairie_sp_2019_long %>%
-  left_join(list_sp_clean %>% select(sp_ID, validated_species), 
-            by = c("species" = "sp_ID")
-  )
-
-# on va renommer les colonnes 
-prairie_sp_2019_long <- prairie_sp_2019_long %>%
-  rename(
-    year = Annee,
-    zone = Parcelles,
-    sp_ID = species,
-    species = validated_species
-  )
-
-# et les réagencer pour s'y retrouver
-prairie_sp_2019_long <- prairie_sp_2019_long[, c(
-  "year",
-  "zone",
-  "quad_ID",
-  "sp_ID",
-  "species",
-  "abundance"
-)]
+# # maintenant on va pivoter le tableau pour avoir une ligne par espèce pour 
+# # chaque quadrat
+# prairie_sp_2019_long <- prairie_sp_2019 %>%
+#   pivot_longer(
+#     cols = -c(Annee, Parcelles, quad_ID),
+#     names_to = "species",
+#     values_to = "abundance"
+#   )
 
 # on fait quelques petits changements de noms d'espèces pour les plus chiantes
-prairie_sp_2019_long <- prairie_sp_2019_long %>%
-  mutate(
-    species = case_when(
-      species == "Leontodon autumnalis" ~ "Scorzoneroides autumnalis",
-      species == "Taraxacum officinale" ~ "Taraxacum officinale agg.",
-      species == "Bistorta officinalis" ~ "Persicaria bistorta",
-      species == "Matricaria chamomilla" ~ "Matricaria recutita",
-      TRUE ~ species
-    )
-  )
+# prairie_sp_2019_long <- prairie_sp_2019_long %>%
+#   mutate(
+#     species = case_when(
+#       species == "Leontodon autumnalis" ~ "Scorzoneroides autumnalis",
+#       species == "Taraxacum officinale" ~ "Taraxacum officinale agg.",
+#       species == "Bistorta officinalis" ~ "Persicaria bistorta",
+#       species == "Matricaria chamomilla" ~ "Matricaria recutita",
+#       TRUE ~ species
+#     )
+#   ) %in% c("Annee", "Parcelles")
+
+# # on va joindre les noms validés proprement aux noms de code
+# prairie_sp_2019_long <- prairie_sp_2019_long %>%
+#   left_join(list_sp_clean %>% select(sp_ID, validated_species), 
+#             by = c("species" = "sp_ID")
+#   )
+# 
+# # on va renommer les colonnes 
+# prairie_sp_2019_long <- prairie_sp_2019_long %>%
+#   rename(
+#     year = Annee,
+#     zone = Parcelles,
+#     sp_ID = species,
+#     species = validated_species
+#   )
+# 
+# # et les réagencer pour s'y retrouver
+# prairie_sp_2019_long <- prairie_sp_2019_long[, c(
+#   "year",
+#   "zone",
+#   "quad_ID",
+#   "sp_ID",
+#   "species",
+#   "abundance"
+# )]
+# 
+# # on fait quelques petits changements de noms d'espèces pour les plus chiantes
+# prairie_sp_2019_long <- prairie_sp_2019_long %>%
+#   mutate(
+#     species = case_when(
+#       species == "Leontodon autumnalis" ~ "Scorzoneroides autumnalis",
+#       species == "Taraxacum officinale" ~ "Taraxacum officinale agg.",
+#       species == "Bistorta officinalis" ~ "Persicaria bistorta",
+#       species == "Matricaria chamomilla" ~ "Matricaria recutita",
+#       TRUE ~ species
+#     )
+#   )
+
+ell_19 <- c("ell_light_uk", "ell_moist_uk", "ell_pH_uk", "ell_N", "ell_S")
+
+species_check_rmv <- species_check %>%
+  filter_out(validated_species == c("Cynosurus cristatus", "Myosotis")) %>%
+  filter_out(species_clean == "Carex vulpina")
+  # mutate(
+  #   validated_species = case_when(
+  #     validated_species == "Leontodon autumnalis" ~ "Scorzoneroides autumnalis",
+  #     validated_species == "Taraxacum officinale" ~ "Taraxacum officinale agg.",
+  #     validated_species == "Bistorta officinalis" ~ "Persicaria bistorta",
+  #     validated_species == "Centaurea jacea" ~ "Centaurea x moncktonii = C. nigra x C. jacea",
+  #     validated_species == "Matricaria chamomilla" ~ "Matricaria recutita",
+  #     TRUE ~ validated_species
+  #   )
+  
 
 
+traits_19 <- tr8(species_list = species_check_rmv$validated_species, download_list = ell_19, allow_persistent = T)
+
+# traits_test <- tr8(species_list = species_check_rmv$validated_species[1:35], download_list = ell, synonyms = FALSE, allow_persistent = TRUE)
+# print(traits_test)
+
+
+trait_table_19 <- as_tibble(traits@results, rownames = "sp") %>% rowwise() %>%
+  mutate(ell_light_uk = mean(unlist(lapply(strsplit(gsub("x","",ell_light_uk), ";"),as.numeric)),na.rm=T)) %>%
+  mutate(ell_pH_uk = mean(unlist(lapply(strsplit(gsub("x","",ell_pH_uk), ";"),as.numeric)),na.rm=T)) %>%
+  mutate(ell_moist_uk = mean(unlist(lapply(strsplit(gsub("x","",ell_moist_uk), ";"),as.numeric)),na.rm=T)) %>%
+  mutate(ell_N = mean(unlist(lapply(strsplit(gsub("x","",ell_N), ";"),as.numeric)),na.rm=T)) %>%
+  mutate(ell_S = mean(unlist(lapply(strsplit(gsub("x","",ell_S), ";"),as.numeric)),na.rm=T))
+
+#trait_table[161,] = list("Lolium arundinaceum", 7,7,6,6,1)
+trait_table_19[2,] = list("Achillea millefollium", 7,5,6,4,1)
+trait_table_19[18,] = list("Bromopsis erecta", 7,4,8,3,0)
+trait_table_19[58,] = list("Festuca pratensis", 7,6,6,6,0)
+trait_table_19[91,] = list("Lotus uliginosus", 7,8,6,4,0)
+trait_table_19[94,] = list("Lychnis flo-cuculi", 7,9,6,4,0)
+trait_table_19[126,] = list("Rumex acutus", 5,7,7,7,0)
+
 prairie_sp_2019_long <- prairie_sp_2019_long %>%
-  left_join(trait_table %>% select(sp, ell_light_uk, ell_moist_uk, ell_pH_uk, ell_N, ell_S),
+  left_join(trait_table_19 %>% select(sp, ell_light_uk, ell_moist_uk, ell_pH_uk, ell_N, ell_S),
             by = c("species" = "sp"))
+
+prairie_sp_2019_long <- prairie_sp_2019_long %>% filter(zone == "Mesnil st père 2")
+
+
