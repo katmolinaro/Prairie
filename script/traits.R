@@ -277,14 +277,14 @@ trait_table <- as_tibble(traits@results, rownames = "sp") %>% rowwise() %>%
   mutate(ell_N = mean(unlist(lapply(strsplit(gsub("x","",ell_N), ";"),as.numeric)),na.rm=T)) %>%
   mutate(ell_S = mean(unlist(lapply(strsplit(gsub("x","",ell_S), ";"),as.numeric)),na.rm=T))
 
- #trait_table[161,] = list("Lolium arundinaceum", 7,7,6,6,1)
+trait_table[161,] = list("Lolium arundinaceum", 7,7,6,6,1)
 trait_table[34,] = list("Centaurea jacea", 7,6,5,5,0)
-trait_table[2,] = list("Achillea millefollium", 7,5,6,4,1)
-trait_table[18,] = list("Bromopsis erecta", 7,4,8,3,0)
-trait_table[58,] = list("Festuca pratensis", 7,6,6,6,0)
-trait_table[91,] = list("Lotus uliginosus", 7,8,6,4,0)
-trait_table[94,] = list("Lychnis flo-cuculi", 7,9,6,4,0)
-trait_table[126,] = list("Rumex acutus", 5,7,7,7,0)
+# trait_table[2,] = list("Achillea millefollium", 7,5,6,4,1)
+# trait_table[18,] = list("Bromopsis erecta", 7,4,8,3,0)
+# trait_table[58,] = list("Festuca pratensis", 7,6,6,6,0)
+# trait_table[91,] = list("Lotus uliginosus", 7,8,6,4,0)
+# trait_table[94,] = list("Lychnis flo-cuculi", 7,9,6,4,0)
+# trait_table[126,] = list("Rumex acutus", 5,7,7,7,0)
 
 ################################################################################
 ####          Jointure entre les données de traits et les données           ####  
