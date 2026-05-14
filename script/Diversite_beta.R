@@ -130,6 +130,39 @@ tree = hclust(bray_dist)
 plot(tree, main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes parcelles")
 
 
+##### Différence de diversité Bêta sur Grande parcelle entre 2019, 2022, 2024 et 2026 #####
+##Garder que les données 2019, 2022, 2024, 2026
+données_26192422 <- prairie_sp_clean %>% 
+  filter(Annee %in% c("2026", "2019", "2022", "2024"))
+
+##Garder que les données Grande parcelle
+GrParcelle <- données_26192422 %>% 
+  filter(Parcelles == "Grande parcelle")
+
+# Changer les noms des lignes pour avoir id_parcelle
+quadrat_Gp <- GrParcelle %>%
+  group_by(Parcelles) %>%
+  mutate(id = paste0(row_number(), "_", Annee))%>%
+  ungroup() %>%
+  column_to_rownames("id")
+
+#Garder que les données utilisables et nommer les parcelles
+donnée_brute_Gp <- quadrat_Gp %>%
+  select(-c(1:2))
+
+# Calculer la matrice de dissimilarité de Bray-Curtis entre les moyennes des différentes parcelles
+bray_dist <- vegdist(donnée_brute_Gp, method = "bray")
+
+# Convertir en matrice complète
+as.matrix(bray_dist) 
+
+# Visualiser avec un dendrogramme
+plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre entre 2019, 2022, 2024, 2026 à Grande Parcelle")
+
+
+tree = hclust(bray_dist)
+plot(tree, main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes parcelles")
+
 
 
 ##### Test variation moyennes des indices de Bray-Curtis entre les parselles #####
