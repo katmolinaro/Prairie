@@ -11,7 +11,8 @@ prairie_sp_2026_long <- na.omit(prairie_sp_2026_long)
 
 traits_parcelles <- prairie_sp_2026_long %>%
   group_by(zone,quad_ID) %>%
-  summarise(final_N = sum(new_N),final_pH = sum(new_pH), final_sel=sum(new_sel), final_hum=sum(new_hum),
+  summarise(final_N = sum(new_N),final_pH = sum(new_pH), final_sel=sum(new_sel), 
+            final_hum=sum(new_hum),
             final_light=sum(new_light)) %>%
   ungroup()
 
@@ -95,7 +96,7 @@ ACP
 ggsave("N_parcelles.svg",N_parcelles,width=250,height=200,units=c("mm"),dpi=900,bg="transparent",limitsize = FALSE)
 
 
-<<<<<<< HEAD
+
 
 (light_parcelles <-ggplot(traits_parcelles, aes(x = reorder(zone, -final_light, FUN = mean, na.rm = TRUE),
                                            y = final_light,
@@ -182,3 +183,172 @@ ggcorrplot(heatmap$r, hc.order = FALSE,
            tl.col = "black",
            colors = c("blue", "white", "red"), 
            ggtheme=theme_bw)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+####################### Analyses temp
+
+
+
+### Data
+
+traits_parcelles <- traits_parcelles %>% filter(zone =="Mesnil st père 2")
+
+prairie_sp_2019_long$new_N <- prairie_sp_2019_long$ell_N * prairie_sp_2019_long$abundance
+prairie_sp_2019_long$new_pH <- prairie_sp_2019_long$ell_pH_uk* prairie_sp_2019_long$abundance
+prairie_sp_2019_long$new_light <- prairie_sp_2019_long$ell_light_uk * prairie_sp_2019_long$abundance
+prairie_sp_2019_long$new_sel <- prairie_sp_2019_long$ell_S * prairie_sp_2019_long$abundance
+prairie_sp_2019_long$new_hum <- prairie_sp_2019_long$ell_moist_uk * prairie_sp_2019_long$abundance
+
+prairie_sp_2019_long <- na.omit(prairie_sp_2019_long)
+
+traits_parcelles_19 <- prairie_sp_2019_long %>%
+  group_by(zone,quad_ID) %>%
+  summarise(final_N = sum(new_N),final_pH  = sum(new_pH), final_sel =sum(new_sel), 
+            final_hum =sum(new_hum),
+            final_light =sum(new_light)) %>%
+  ungroup()
+
+traits_parcelles <- traits_parcelles %>%
+  mutate(year = 2026)
+
+traits_parcelles_19 <- traits_parcelles_19 %>%
+  mutate(year = 2019)
+
+traits_parcelles_20192026 <- bind_rows(traits_parcelles, traits_parcelles_19)
+
+
+
+### Analyses
+#première anova pour savoir si on a des différences de traits entre les parcelles + vérification conditions application
+#pour N
+t.test(traits_parcelles$final_N_26, traits_parcelles_19$final_N_19)
+
+
+#pour lumière
+t.test(traits_parcelles$final_light_26, traits_parcelles_19$final_light_19)
+
+
+#pour pH
+t.test(traits_parcelles$final_pH_26, traits_parcelles_19$final_pH_19)
+
+
+#pour humidité
+t.test(traits_parcelles$final_hum_26, traits_parcelles_19$final_hum_19)
+
+
+#pour sel
+t.test(traits_parcelles$final_sel_26, traits_parcelles_19$final_sel_19)
+
+
+
+
+### Graphes 
+
+
+
+par(mfrow=c(2,2))
+
+(N_parcelles <-ggplot(traits_parcelles_20192026, aes(x = reorder(year, final_N, FUN = mean, na.rm = TRUE, order = F),
+                                            y = final_N
+                                            )) +
+    geom_boxplot() +
+    geom_jitter(size = 1) +
+    stat_summary(fun = mean, geom = "crossbar", width = 0.75, color = "black", size = 0.2,linetype = "dashed") +
+    theme_minimal() +
+    #stat_summary(fun = max, geom = "text", aes(label = c(new_letters_Dim1)[factor(SP_valide)]), vjust = -0.5, size = 7) +
+    labs(x = "",
+         y = "Valeurs d'affinité aux nitrates") +
+    theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust=1, size = 14),
+          axis.text.y = element_text(size = 12),
+          axis.title.y = element_text(size = 16, face = "bold"),
+          legend.position = "none")
+)
+
+
+ggsave("N_parcelles.svg",N_parcelles,width=250,height=200,units=c("mm"),dpi=900,bg="transparent",limitsize = FALSE)
+
+
+
+
+(light_parcelles <-ggplot(traits_parcelles_20192026, aes(x = reorder(year, final_light, FUN = mean, na.rm = TRUE),
+                                                y = final_light
+                                                )) +
+    geom_boxplot() +
+    geom_jitter(size = 1) +
+    stat_summary(fun = mean, geom = "crossbar", width = 0.75, color = "black", size = 0.2,linetype = "dashed") +
+    theme_minimal() +
+    #stat_summary(fun = max, geom = "text", aes(label = c(new_letters_Dim1)[factor(SP_valide)]), vjust = -0.5, size = 7) +
+    labs(x = "",
+         y = "Valeurs d'affinité à la lumière") +
+    theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust=1, size = 14),
+          axis.text.y = element_text(size = 12),
+          axis.title.y = element_text(size = 16, face = "bold"),
+          legend.position = "none")
+)
+light_parcelles
+
+
+(pH_parcelles <-ggplot(traits_parcelles_20192026, aes(x = reorder(year, final_pH, FUN = mean, na.rm = TRUE),
+                                             y = final_pH
+                                             )) +
+    geom_boxplot() +
+    geom_jitter(size = 1) +
+    stat_summary(fun = mean, geom = "crossbar", width = 0.75, color = "black", size = 0.2,linetype = "dashed") +
+    theme_minimal() +
+    #stat_summary(fun = max, geom = "text", aes(label = c(new_letters_Dim1)[factor(SP_valide)]), vjust = -0.5, size = 7) +
+    labs(x = "",
+         y = "Valeurs d'affinité au pH") +
+    theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust=1, size = 14),
+          axis.text.y = element_text(size = 12),
+          axis.title.y = element_text(size = 16, face = "bold"),
+          legend.position = "none")
+)
+pH_parcelles
+
+(hum_parcelles <-ggplot(traits_parcelles_20192026, aes(x = reorder(year, final_hum, FUN = mean, na.rm = TRUE),
+                                              y = final_hum
+                                              )) +
+    geom_boxplot() +
+    geom_jitter(size = 1) +
+    stat_summary(fun = mean, geom = "crossbar", width = 0.75, color = "black", size = 0.2,linetype = "dashed") +
+    theme_minimal() +
+    #stat_summary(fun = max, geom = "text", aes(label = c(new_letters_Dim1)[factor(SP_valide)]), vjust = -0.5, size = 7) +
+    labs(x = "",
+         y = "Valeurs d'affinité à l'humidité") +
+    theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust=1, size = 14),
+          axis.text.y = element_text(size = 12),
+          axis.title.y = element_text(size = 16, face = "bold"),
+          legend.position = "none")
+)
+hum_parcelles
+
+
+
+
+par(mfrow=c(2,2))
+light_parcelles
+N_parcelles
+pH_parcelles
+hum_parcelles
+par(mfrow=c(1,1))
+
+layout (matrix(c(1,2,3,4),2,2))
+light_parcelles
+N_parcelles
+pH_parcelles
+hum_parcelles
+
+
+
