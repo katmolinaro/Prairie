@@ -99,7 +99,7 @@ rect.hclust(tree,k=4)
 ##### Différence de diversité Bêta sur Ménil St Pierre 1 entre 2019, 2024 et 2026 #####
 ##Garder que les données 2019, 2022, 2024, 2026
 données_261924 <- prairie_sp_clean %>% 
-  filter(Annee %in% c("2026", "2019", "2022", "2024"))
+  filter(Annee %in% c("2026", "2019", "2023", "2024"))
 
 ##Garder que les données Ménil st père 2
 menilstpere_1 <- données_261924 %>% 
@@ -163,6 +163,40 @@ plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre en
 tree = hclust(bray_dist)
 plot(tree, main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes parcelles")
 
+
+
+##### Différence de diversité Bêta sur Gite entre 2019, 2022, 2024 et 2026 #####
+##Garder que les données 2019, 2022, 2024, 2026
+données_26192422 <- prairie_sp_clean %>% 
+  filter(Annee %in% c("2026", "2019", "2022", "2024"))
+
+##Garder que les données Grande parcelle
+Gite <- données_26192422 %>% 
+  filter(Parcelles == "Gite")
+
+# Changer les noms des lignes pour avoir id_parcelle
+quadrat_G <- Gite %>%
+  group_by(Parcelles) %>%
+  mutate(id = paste0(row_number(), "_", Annee))%>%
+  ungroup() %>%
+  column_to_rownames("id")
+
+#Garder que les données utilisables et nommer les parcelles
+donnée_brute_G <- quadrat_G %>%
+  select(-c(1:2))
+
+# Calculer la matrice de dissimilarité de Bray-Curtis entre les moyennes des différentes parcelles
+bray_dist <- vegdist(donnée_brute_G, method = "bray")
+
+# Convertir en matrice complète
+as.matrix(bray_dist) 
+
+# Visualiser avec un dendrogramme
+plot(hclust(bray_dist), main = "Dendrogramme de l'indice de Bray-Curtis entre entre 2019, 2022, 2024, 2026 à Gite")
+
+
+tree = hclust(bray_dist)
+plot(tree, main = "Dendrogramme de l'indice de Bray-Curtis entre les différentes parcelles")
 
 
 ##### Test variation moyennes des indices de Bray-Curtis entre les parselles #####
